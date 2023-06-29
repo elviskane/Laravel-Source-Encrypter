@@ -106,7 +106,8 @@ class SourceEncryptCommand extends Command
 
     private function encryptFile($filePath, $destination, $keyLength)
     {
-        $key = Str::random($keyLength);
+        
+        $key = !is_null(env('PHP_BOLT_KEY'))? env('PHP_BOLT_KEY') : Str::random($keyLength);
         if (File::isDirectory(base_path($filePath))) {
             if (!File::exists(base_path($destination . $filePath))) {
                 File::makeDirectory(base_path("$destination/$filePath"), 493, true);
@@ -131,7 +132,9 @@ class SourceEncryptCommand extends Command
 
         $fileContents = File::get(base_path($filePath));
 
-        $prepend = "<?php
+        $prepend = !is_null(env('PHP_BOLT_KEY')) "<?php
+bolt_decrypt( __FILE__ , 'env('PHP_BOLT_KEY')'); return 0;
+##!!!##" ? :"<?php
 bolt_decrypt( __FILE__ , '$key'); return 0;
 ##!!!##";
         $pattern = '/\<\?php/m';
