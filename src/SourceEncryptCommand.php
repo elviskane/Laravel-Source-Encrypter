@@ -132,9 +132,7 @@ class SourceEncryptCommand extends Command
 
         $fileContents = File::get(base_path($filePath));
 
-        $prepend = !is_null(env('PHP_BOLT_KEY')) ? "<?php
-bolt_decrypt( __FILE__ , env('PHP_BOLT_KEY')); return 0;
-##!!!##":"<?php
+        $prepend = "<?php
 bolt_decrypt( __FILE__ , '$key'); return 0;
 ##!!!##";
         $pattern = '/\<\?php/m';
