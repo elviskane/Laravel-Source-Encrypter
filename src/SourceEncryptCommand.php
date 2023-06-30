@@ -132,9 +132,13 @@ class SourceEncryptCommand extends Command
 
         $fileContents = File::get(base_path($filePath));
 
-        $prepend = !is_null(env('PHP_BOLT_KEY')) ? "<?php
-bolt_decrypt( __FILE__ , env('PHP_BOLT_KEY')); return 0;
-##!!!##":"<?php
+        $prepend = !is_null(env('PHP_BOLT_KEY')) ? '<?php
+         $path=strstr(__DIR__, "zazuhubencrypt", true)."zazuhubencrypt";
+        require_once $path. "/vendor/autoload.php";
+$dotenv = Dotenv\Dotenv::createImmutable($path);
+$dotenv->load();
+bolt_decrypt( __FILE__ , env("PHP_BOLT_KEY")); return 0;
+##!!!##' : "<?php
 bolt_decrypt( __FILE__ , '$key'); return 0;
 ##!!!##";
         $pattern = '/\<\?php/m';
